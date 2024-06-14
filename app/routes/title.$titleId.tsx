@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
 import { Layout } from "../layouts/Layout";
-
+import React, { useParams } from "@remix-run/react";
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
@@ -11,7 +11,10 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Index() {
+export default function Title() {
+
+  const params = useParams();
+
   return (
     <Layout>
       hello there
