@@ -10,7 +10,4 @@ bucket = "./build/client"
 
 [build]
 command = "npm run build"
-watch_dir = "app"
 
-[build.upload]
-format = "service-worker"
