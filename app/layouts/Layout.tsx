@@ -1,6 +1,5 @@
 import { Link, useLocation } from "@remix-run/react";
 import { PropsWithChildren, useState } from "react";
-import {IconX, IconAlignJustified} from "@tabler/icons-react"
 
 export const Layout = ({ children }: PropsWithChildren) => {
   const { pathname } = useLocation();
@@ -25,7 +24,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
         <div className="flex justify-between">
           <div>MangaKU</div>
           <button onClick={toggleSidebar}>
-						<IconX />
+          <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-x"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
 					</button>
         </div>
         <div>
@@ -63,7 +62,7 @@ export const Layout = ({ children }: PropsWithChildren) => {
                 className={`${isSidebarEnable ? "hidden" : ""}`}
                 onClick={toggleSidebar}
               >
-                <IconAlignJustified />
+                <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  className="icon icon-tabler icons-tabler-outline icon-tabler-align-justified"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 6l16 0" /><path d="M4 12l16 0" /><path d="M4 18l12 0" /></svg>
               </button>
             </div>
             <div>
