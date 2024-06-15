@@ -1,4 +1,4 @@
-name = "remix-cloudflare-workers-template"
+name = "remix-cloudflare-testo"
 
 main = "./server.js"
 workers_dev = true
@@ -10,3 +10,7 @@ bucket = "./build/client"
 
 [build]
 command = "npm run build"
+watch_dir = "app"
+
+[build.upload]
+format = "service-worker"
