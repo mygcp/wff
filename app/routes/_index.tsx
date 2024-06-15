@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <Layout>
-      Here come
+      Here 
     </Layout>
   );
 }
