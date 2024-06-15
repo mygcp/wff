@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { Layout } from "~/root";
+import { Layout } from "../layouts/Layout";
 
 export const meta: MetaFunction = () => {
   return [
@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   return (
     <Layout>
-      Here
+      Here come
     </Layout>
   );
 }
