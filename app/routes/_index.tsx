@@ -23,9 +23,7 @@ export const loader = async () => {
     }),
   ]);
 
-  const latest: MangaResponse = await getLatest.json() as MangaResponse;
-
-  return json({ getLatest: latest});
+  return json({ getLatest: await getLatest.json()});
 };
 
 export default function Index() {
