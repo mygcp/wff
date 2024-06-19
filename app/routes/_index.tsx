@@ -28,9 +28,7 @@ export const loader = async () => {
   const getId = latest.data.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
 
   const coverUrls = await Promise.all(getId.map(async (id) => {
-    const response = await fetch('https:/api.mangadex.org/cover/'+id, {
-      method: 'GET'
-    })
+    const response = await fetch('https:/api.mangadex.org/cover/'+id)
     const toJSON: Cover = await response.json() as Cover;
 
     return toJSON.data.attributes.fileName;
