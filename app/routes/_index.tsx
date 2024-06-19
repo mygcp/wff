@@ -4,7 +4,7 @@ import { baseURL } from "~/utils/baseURL";
 import { useLoaderData } from "@remix-run/react";
 import MangaResponse from "~/type/Manga";
 import Cover from "~/type/Cover";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -27,20 +27,27 @@ export const loader = async () => {
 
   const getId = latest.data.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
 
-  const coverUrls = await Promise.all(getId.map(async (id) => {
-    const response = await fetch('https:/api.mangadex.org/cover/'+id)
-    const toJSON: Cover = await response.json() as Cover;
-
-    return toJSON.data.attributes.fileName;
-  }))
-
-
-
-  return json({ getLatest: latest, coverUrls: coverUrls });
+  return json({ getLatest: latest, getId: getId });
 };
 
 export default function Index() {
-  const { getLatest, coverUrls } = useLoaderData<typeof loader>();
+  const { getLatest, getId } = useLoaderData<typeof loader>();
+
+  const [coverUrls, setCoverUrls] = useState(['']);
+
+  useEffect(() => {
+    const exec = async () => {
+      const res = await Promise.all(getId.map(async (id) => {
+        const response = await fetch('https:/api.mangadex.org/cover/'+id)
+        const toJSON: Cover = await response.json() as Cover;
+    
+        return toJSON.data.attributes.fileName;
+      }))
+      setCoverUrls(res)
+    }
+    exec();
+  }, [coverUrls])
+
 
   const latestManga: MangaResponse = getLatest as MangaResponse;
 
