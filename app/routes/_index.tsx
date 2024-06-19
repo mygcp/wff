@@ -25,18 +25,18 @@ export const loader = async () => {
 
   const latest: MangaResponse = await getLatest.json() as MangaResponse;
 
-  const getId = latest.data.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
-
-  return json({ getLatest: latest, getId: getId });
+  return json({ getLatest: latest});
 };
 
 export default function Index() {
-  const { getLatest, getId } = useLoaderData<typeof loader>();
+  const { getLatest } = useLoaderData<typeof loader>();
 
   const [coverUrls, setCoverUrls] = useState(['']);
 
   useEffect(() => {
     const exec = async () => {
+      const getId = getLatest.data.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
+
       const res = await Promise.all(getId.map(async (id) => {
         const response = await fetch('https:/api.mangadex.org/cover/'+id)
         const toJSON: Cover = await response.json() as Cover;
