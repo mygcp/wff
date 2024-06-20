@@ -1,4 +1,5 @@
-import { json, type MetaFunction } from "@remix-run/cloudflare";
+import { LoaderFunctionArgs, json, type MetaFunction } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/cloudflare";
 import { Layout } from "../layouts/Layout";
 import { baseURL } from "~/utils/baseURL";
 import { useLoaderData } from "@remix-run/react";
@@ -16,24 +17,27 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const loader = async () => {
-  const [getLatest] = await Promise.all([
-    fetch(baseURL + "/manga", {
-      method: "GET",
-    }),
-  ]);
+export const loader: LoaderFunction = async ({context}: LoaderFunctionArgs) => {
+  const getLatest = await fetch(baseURL + "/manga", {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
+    }
+  })
 
-  return json({ getLatest: await getLatest.json() as MangaResponse});
+  return json(await getLatest.json());
 };
 
 export default function Index() {
-  const { getLatest } = useLoaderData<typeof loader>();
+  const getLatest = useLoaderData<typeof loader>();
+
+  const data = getLatest as MangaResponse;
 
   const [coverUrls, setCoverUrls] = useState(['']);
 
   useEffect(() => {
     const exec = async () => {
-      const getId = getLatest.data.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
+
+      const getId = data.data?.map(value => value.relationships).map(result => result.filter(value => value.type === 'cover_art')[0].id)
 
       const res = await Promise.all(getId.map(async (id) => {
         const response = await fetch('https:/api.mangadex.org/cover/'+id)
@@ -44,7 +48,7 @@ export default function Index() {
       setCoverUrls(res)
     }
     exec();
-  }, [coverUrls])
+  }, [])
 
 
   const latestManga: MangaResponse = getLatest as MangaResponse;
