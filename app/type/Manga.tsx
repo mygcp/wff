@@ -59,7 +59,7 @@ interface MangaData {
   }[];
 }
 
-interface MangaResponse {
+interface Manga {
   result: string;
   response: string;
   data: MangaData[];
@@ -68,4 +68,4 @@ interface MangaResponse {
   total: number;
 }
 
-export default MangaResponse;
+export default Manga;
