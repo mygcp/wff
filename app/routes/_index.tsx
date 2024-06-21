@@ -23,6 +23,10 @@ export const clientLoader = async (args: ClientLoaderFunctionArgs) => {
   const contentRating = ["safe", "suggestive", "erotica"];
 
   const fetchChapter = await axios.get(baseURL + "/chapter", {
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
+    },
     params: {
       limit: "48",
       offset: "0",
@@ -49,7 +53,11 @@ export const clientLoader = async (args: ClientLoaderFunctionArgs) => {
     });
   });
 
-  const fetchManga = await axios.get(baseURL + "/manga/", {
+  const fetchManga = await axios.get(baseURL + "/manga", {
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
+    },
     params: {
       ids: getMangaID,
       "contentRating[]": contentRating,
