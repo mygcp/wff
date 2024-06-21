@@ -30,11 +30,18 @@ export const loader = async ({context}: LoaderFunctionArgs) => {
     },
   });
 
-  return json({ getLatest: (await getLatest.data) as MangaResponse });
+  const getBook = await axios.get("https://openlibrary.org/works/OL18020194W/bookshelves.json", {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36",
+    },
+  });
+
+  return json({ getLatest: (await getLatest.data) as MangaResponse, getBook: await getBook.data });
 };
 
 export default function Index() {
-  const { getLatest } = useLoaderData<typeof loader>();
+  const { getLatest, getBook } = useLoaderData<typeof loader>();
 
   const [coverUrls, setCoverUrls] = useState<String[]>([]);
 
@@ -59,6 +66,10 @@ export default function Index() {
       <div className="px-2">
         <div className="text-2xl font-mono my-4">Latest Updates</div>
         <div className="grid grid-cols-4 gap-3">
+
+          <div>
+            {JSON.stringify(getBook)}
+          </div>
           <div className="bg-slate-50 spacy-3">
             {getLatest.data.map((result, Index) => (
               <div>
