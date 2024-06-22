@@ -83,21 +83,9 @@ export default function Index() {
       const includes = ["user", "scanlation_group", "manga"];
       const contentRating = ["safe", "suggestive", "erotica"];
 
-      const fetchChapter = await axios.get(baseURL + "/chapter", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        params: {
-          limit: "48",
-          offset: "0",
-          "includes[]": includes,
-          "contentRating[]": contentRating,
-          "order[readableAt]": "desc",
-          translatedLanguage: languages,
-        },
-      });
+      const fetchChapter = await fetch(baseURL + "/chapter?limit=48&offset=0&includes[]=user&includes[]=scanlation_group&includes[]=manga&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&order[readableAt]=desc&translatedLanguage[]=en&translatedLanguage[]=id&translatedLanguage[]=jp");
 
-      const getChapter = (await fetchChapter.data) as ChapterMangaResponse;
+      const getChapter = (await fetchChapter.json()) as ChapterMangaResponse;
 
       const getMangaID: string[] = [];
 
