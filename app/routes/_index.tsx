@@ -6,6 +6,7 @@ import { ClientLoaderFunctionArgs, useLoaderData } from "@remix-run/react";
 import { MetaFunction } from "@remix-run/cloudflare";
 import { flags } from "~/utils/flags";
 import ChapterMangaResponse from "~/type/ChapterMangaResponse";
+import { useEffect, useState } from "react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,77 +18,137 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export const clientLoader = async (args: ClientLoaderFunctionArgs) => {
-  const languages = ["en", "id", "jp"];
-  const includes = ["user", "scanlation_group", "manga"];
-  const contentRating = ["safe", "suggestive", "erotica"];
+// export const clientLoader = async (args: ClientLoaderFunctionArgs) => {
+//   const languages = ["en", "id", "jp"];
+//   const includes = ["user", "scanlation_group", "manga"];
+//   const contentRating = ["safe", "suggestive", "erotica"];
 
-  const fetchChapter = await axios.get(baseURL + "/chapter", {
-    headers: {
-      "Content-Type": "application/json",
-      "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
-    },
-    params: {
-      limit: "48",
-      offset: "0",
-      "includes[]": includes,
-      "contentRating[]": contentRating,
-      "order[readableAt]": "desc",
-      translatedLanguage: languages,
-    },
-  });
+//   const fetchChapter = await axios.get(baseURL + "/chapter", {
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     params: {
+//       limit: "48",
+//       offset: "0",
+//       "includes[]": includes,
+//       "contentRating[]": contentRating,
+//       "order[readableAt]": "desc",
+//       translatedLanguage: languages,
+//     },
+//   });
 
-  const getChapter = (await fetchChapter.data) as ChapterMangaResponse;
+//   const getChapter = (await fetchChapter.data) as ChapterMangaResponse;
 
-  const getMangaID: string[] = [];
+//   const getMangaID: string[] = [];
 
-  getChapter.data.forEach((res) => {
-    res.relationships.forEach((relation) => {
-      if (
-        relation.type === "manga" ||
-        relation.type === "manhwa" ||
-        relation.type === "manhua"
-      ) {
-        if (!getMangaID.includes(relation.id)) getMangaID.push(relation.id);
-      }
-    });
-  });
+//   getChapter.data.forEach((res) => {
+//     res.relationships.forEach((relation) => {
+//       if (
+//         relation.type === "manga" ||
+//         relation.type === "manhwa" ||
+//         relation.type === "manhua"
+//       ) {
+//         if (!getMangaID.includes(relation.id)) getMangaID.push(relation.id);
+//       }
+//     });
+//   });
 
-  const fetchManga = await axios.get(baseURL + "/manga", {
-    headers: {
-      "Content-Type": "application/json",
-      "User-Agent" : "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246"
-    },
-    params: {
-      ids: getMangaID,
-      "contentRating[]": contentRating,
-      "includes[]": "cover_art",
-      limit: 100,
-    },
-  });
+//   const fetchManga = await axios.get(baseURL + "/manga", {
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     params: {
+//       ids: getMangaID,
+//       "contentRating[]": contentRating,
+//       "includes[]": "cover_art",
+//       limit: 100,
+//     },
+//   });
 
-  const getManga = (await fetchManga.data) as MangaResponse;
+//   const getManga = (await fetchManga.data) as MangaResponse;
 
-  return {
-    getChapter,
-    getManga,
-  };
-};
+//   return {
+//     getChapter,
+//     getManga,
+//   };
+// };
 
 export default function Index() {
-  const { getManga, getChapter } = useLoaderData<typeof clientLoader>();
+  const [manga, setManga] = useState<MangaResponse>();
+  const [chapter, setChapter] = useState<ChapterMangaResponse>();
+
+  useEffect(() => {
+    const exec = async () => {
+      const languages = ["en", "id", "jp"];
+      const includes = ["user", "scanlation_group", "manga"];
+      const contentRating = ["safe", "suggestive", "erotica"];
+
+      const fetchChapter = await axios.get(baseURL + "/chapter", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: {
+          limit: "48",
+          offset: "0",
+          "includes[]": includes,
+          "contentRating[]": contentRating,
+          "order[readableAt]": "desc",
+          translatedLanguage: languages,
+        },
+      });
+
+      const getChapter = (await fetchChapter.data) as ChapterMangaResponse;
+
+      const getMangaID: string[] = [];
+
+      getChapter.data.forEach((res) => {
+        res.relationships.forEach((relation) => {
+          if (
+            relation.type === "manga" ||
+            relation.type === "manhwa" ||
+            relation.type === "manhua"
+          ) {
+            if (!getMangaID.includes(relation.id)) getMangaID.push(relation.id);
+          }
+        });
+      });
+
+      const fetchManga = await axios.get(baseURL + "/manga", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: {
+          ids: getMangaID,
+          "contentRating[]": contentRating,
+          "includes[]": "cover_art",
+          limit: 100,
+        },
+      });
+
+      const getManga = (await fetchManga.data) as MangaResponse;
+
+      setManga(getManga);
+      setChapter(getChapter);
+    };
+
+    exec();
+  }, []);
 
   return (
     <Layout>
       <div className="px-2">
         <div className="text-2xl font-mono my-4">Latest Updates</div>
         <div className="w-full mt-20">
-          {getManga.data.map((data, index) => (
+          {manga?.data.map((data, index) => (
             <div key={index} className="p-3 flex bg-slate-100">
               <div className="mr-2">
                 <img
                   className="object-cover h-48 w-36"
-                  src={`https://mangadex.org/covers/${data.id}/${data.relationships.find((val) => val.attributes !== undefined)?.attributes?.fileName}.256.jpg`}
+                  src={`https://mangadex.org/covers/${data.id}/${
+                    data.relationships.find(
+                      (val) => val.attributes !== undefined
+                    )?.attributes?.fileName
+                  }.256.jpg`}
                   alt="bg-cover"
                 />
               </div>
