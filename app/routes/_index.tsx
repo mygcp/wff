@@ -78,46 +78,52 @@ export default function Index() {
   const [chapter, setChapter] = useState<ChapterMangaResponse>();
 
   useEffect(() => {
+    // const exec = async () => {
+    //   const languages = ["en", "id", "jp"];
+    //   const includes = ["user", "scanlation_group", "manga"];
+    //   const contentRating = ["safe", "suggestive", "erotica"];
+
+    //   const fetchChapter = await fetch(baseURL + "/chapter?limit=48&offset=0&includes[]=user&includes[]=scanlation_group&includes[]=manga&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&order[readableAt]=desc&translatedLanguage[]=en&translatedLanguage[]=id&translatedLanguage[]=jp");
+
+    //   const getChapter = (await fetchChapter.json()) as ChapterMangaResponse;
+
+    //   const getMangaID: string[] = [];
+
+    //   getChapter.data.forEach((res) => {
+    //     res.relationships.forEach((relation) => {
+    //       if (
+    //         relation.type === "manga" ||
+    //         relation.type === "manhwa" ||
+    //         relation.type === "manhua"
+    //       ) {
+    //         if (!getMangaID.includes(relation.id)) getMangaID.push(relation.id);
+    //       }
+    //     });
+    //   });
+
+    //   const fetchManga = await axios.get(baseURL + "/manga", {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     params: {
+    //       ids: getMangaID,
+    //       "contentRating[]": contentRating,
+    //       "includes[]": "cover_art",
+    //       limit: 100,
+    //     },
+    //   });
+
+    //   const getManga = (await fetchManga.data) as MangaResponse;
+
+    //   setManga(getManga);
+    //   setChapter(getChapter);
+    // };
+
     const exec = async () => {
-      const languages = ["en", "id", "jp"];
-      const includes = ["user", "scanlation_group", "manga"];
-      const contentRating = ["safe", "suggestive", "erotica"];
+      const manga = await fetch('https://api.mangadex.org/chapter');
 
-      const fetchChapter = await fetch(baseURL + "/chapter?limit=48&offset=0&includes[]=user&includes[]=scanlation_group&includes[]=manga&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&order[readableAt]=desc&translatedLanguage[]=en&translatedLanguage[]=id&translatedLanguage[]=jp");
-
-      const getChapter = (await fetchChapter.json()) as ChapterMangaResponse;
-
-      const getMangaID: string[] = [];
-
-      getChapter.data.forEach((res) => {
-        res.relationships.forEach((relation) => {
-          if (
-            relation.type === "manga" ||
-            relation.type === "manhwa" ||
-            relation.type === "manhua"
-          ) {
-            if (!getMangaID.includes(relation.id)) getMangaID.push(relation.id);
-          }
-        });
-      });
-
-      const fetchManga = await axios.get(baseURL + "/manga", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        params: {
-          ids: getMangaID,
-          "contentRating[]": contentRating,
-          "includes[]": "cover_art",
-          limit: 100,
-        },
-      });
-
-      const getManga = (await fetchManga.data) as MangaResponse;
-
-      setManga(getManga);
-      setChapter(getChapter);
-    };
+      console.log(await manga.json())
+    }
 
     exec();
   }, []);
@@ -127,7 +133,7 @@ export default function Index() {
       <div className="px-2">
         <div className="text-2xl font-mono my-4">Latest Updates</div>
         <div className="w-full mt-20">
-          {manga?.data.map((data, index) => (
+          {/* {manga?.data.map((data, index) => (
             <div key={index} className="p-3 flex bg-slate-100">
               <div className="mr-2">
                 <img
@@ -234,7 +240,7 @@ export default function Index() {
                 </div>
               </div>
             </div>
-          ))}
+          ))} */}
 
           {/* <div className="p-3 flex bg-slate-100">
             <div className="mr-2">
