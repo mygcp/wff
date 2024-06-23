@@ -120,11 +120,16 @@ export default function Index() {
     // };
 
     const exec = async () => {
+
+      const IP = await fetch('https://api.ipify.org?format=json');
+      const getIP:any = await IP.json();
+      const ip = getIP?.id !== undefined ? getIP.id : '' 
+      const headers = new Headers();
+      headers.append('X-Forwarded-For', ip);
+      
       const manga = await fetch('https://api.mangadex.org/manga', {
         method: 'GET',
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
-        }
+        headers: headers
       });
 
       console.log(await manga.json())
