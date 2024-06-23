@@ -124,6 +124,7 @@ export default function Index() {
       const IP = await fetch('https://api.ipify.org?format=json');
       const getIP:any = await IP.json();
       const ip = getIP?.id !== undefined ? getIP.id : '' 
+      console.log(ip)
       const headers = new Headers();
       headers.append('X-Forwarded-For', ip);
       
